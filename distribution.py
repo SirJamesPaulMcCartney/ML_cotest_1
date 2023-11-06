@@ -33,7 +33,7 @@ class LaplaceDistribution:
         '''
         ####
         # Do not change the class outside of this block
-        return np.log(1/2 * self.scale) + np.abs(values - self.loc) / self.scale
+        return -(np.log(2 * self.scale) + np.abs(values - self.loc) / self.scale)
         ####
 
     def pdf(self, values):
