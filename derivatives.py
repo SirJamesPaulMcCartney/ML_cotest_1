@@ -16,7 +16,7 @@ class LossAndDerivatives:
         Comment: If Y is two-dimentional, average the error over both dimentions.
         """
 
-        return np.mean((X.dot(w) - Y) ** 2)
+        return np.mean((Y - X.dot(w)) ** 2)
 
     @staticmethod
     def mae(X, Y, w):
@@ -33,7 +33,7 @@ class LossAndDerivatives:
         """
 
         # YOUR CODE HERE
-        return
+        return np.mean(np.abs(Y - X.dot(w)))
 
     @staticmethod
     def l2_reg(w):
@@ -47,7 +47,7 @@ class LossAndDerivatives:
         """
 
         # YOUR CODE HERE
-        return
+        return np.dot(w, w.T)
 
     @staticmethod
     def l1_reg(w):
@@ -61,7 +61,7 @@ class LossAndDerivatives:
         """
 
         # YOUR CODE HERE
-        return
+        return np.sum(np.abs(w))
 
     @staticmethod
     def no_reg(w):
@@ -87,7 +87,12 @@ class LossAndDerivatives:
         """
 
         # YOUR CODE HERE
-        return
+
+        error = np.sing(X.dot(w) - Y)
+        # error = X.dot(w) - Y
+        mse_derivative = 2 * X.T.dot(error) / (Y.shape[0] * Y.shape[1])
+
+        return mse_derivative
 
     @staticmethod
     def mae_derivative(X, Y, w):
@@ -106,7 +111,8 @@ class LossAndDerivatives:
         """
 
         # YOUR CODE HERE
-        return
+        error = np.sign(X.dot(w) - Y)
+        return X.T.dot(error) / (X.shape[0].dot(X.shape[1]))  # X.size maybe
 
     @staticmethod
     def l2_reg_derivative(w):
@@ -119,7 +125,7 @@ class LossAndDerivatives:
         """
 
         # YOUR CODE HERE
-        return
+        return 2 * w * np.sign(w)
 
     @staticmethod
     def l1_reg_derivative(w):
@@ -133,7 +139,7 @@ class LossAndDerivatives:
         """
 
         # YOUR CODE HERE
-        return
+        return np.sign(w)  # 1
 
     @staticmethod
     def no_reg_derivative(w):
