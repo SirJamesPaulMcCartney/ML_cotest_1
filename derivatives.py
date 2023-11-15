@@ -87,11 +87,8 @@ class LossAndDerivatives:
         """
 
         # YOUR CODE HERE
-
-        error = np.sing(X.dot(w) - Y)
-        # error = X.dot(w) - Y
-        mse_derivative = 2 * X.T.dot(error) / (Y.shape[0] * Y.shape[1])
-
+        error = X.dot(w) - Y
+        mse_derivative = 2 * np.dot(X.T, error) / Y.size
         return mse_derivative
 
     @staticmethod
@@ -112,7 +109,8 @@ class LossAndDerivatives:
 
         # YOUR CODE HERE
         error = np.sign(X.dot(w) - Y)
-        return X.T.dot(error) / (X.shape[0].dot(X.shape[1]))  # X.size maybe
+        # target_features = Y.size / X.shape[0] or Y.size
+        return (X.T.dot(error)) / Y.size
 
     @staticmethod
     def l2_reg_derivative(w):
