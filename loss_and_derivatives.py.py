@@ -123,7 +123,7 @@ class LossAndDerivatives:
         """
 
         # YOUR CODE HERE
-        return 2 * w * np.sign(w)
+        return 2 * w
 
     @staticmethod
     def l1_reg_derivative(w):
