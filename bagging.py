@@ -45,10 +45,10 @@ class SimplifiedBaggingRegressor:
         Get average prediction for every object from passed dataset
         '''
         # Your code here
-        preds = []
+        models_predictions = np.zeros(len(data))
         for model in self.models_list:
-            preds.append(model.predict(data))
-        return np.mean(preds)
+            models_predictions += model.predict(data)
+        return models_predictions / self.num_bags
 
     def _get_oob_predictions_from_every_model(self):
         '''
@@ -56,6 +56,7 @@ class SimplifiedBaggingRegressor:
         from all models, which have not seen this object during training phase
         '''
         list_of_predictions_lists = [[] for _ in range(len(self.data))]
+
         for idx in range(len(self.data)):
             sample = self.data[idx].reshape(1, -1)
             models_prediction = []
@@ -65,7 +66,6 @@ class SimplifiedBaggingRegressor:
                     models_prediction.append(float(self.models_list[bag].predict(sample)))
             list_of_predictions_lists[idx] = models_prediction
 
-        self.list_of_predictions_lists = np.array(list_of_predictions_lists, dtype=object)
 
         self.list_of_predictions_lists = np.array(list_of_predictions_lists, dtype=object)
 
@@ -75,19 +75,19 @@ class SimplifiedBaggingRegressor:
         If object has been used in all bags on training phase, return None instead of prediction
         '''
         self._get_oob_predictions_from_every_model()
-        self.oob_predictions = np.zeros(len(self.data))  # data.size
+        self.oob_predictions = np.zeros(len(self.data))  # []
 
-        for i in range(len(self.data)):
-            model_prediction = self.list_of_predictions_lists[i]
+        for idx in range(len(self.data)):
+            model_prediction = self.list_of_predictions_lists[idx]
 
             if len(model_prediction) == 0:
-                self.oob_predictions[i] = None
+                self.oob_predictions[idx] = None
             else:
-                self.oob_predictions[i] = sum(model_prediction) / len(model_prediction)
+                self.oob_predictions[idx] = np.mean(model_prediction)
 
     def OOB_score(self):
         '''
         Compute mean square error for all objects, which have at least one prediction
         '''
         self._get_averaged_oob_predictions()
-        return np.nanmean(self.oob_predictions)# Your Code Here
+        return np.nanmean((self.oob_predictions - self.target)**2)# Your Code Here
